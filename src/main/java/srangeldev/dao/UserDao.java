@@ -3,6 +3,7 @@ package srangeldev.dao;
 import org.jdbi.v3.sqlobject.config.RegisterConstructorMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -36,6 +37,8 @@ public interface UserDao {
      * @return El numero de filas insertadas
      */
     @SqlUpdate("INSERT INTO users (name, username, email, createdAt, updatedAt) VALUES (:name, :username, :email, :createdAt, :updatedAt)")
+    @GetGeneratedKeys
+    long save(@BindBean UserEntity user);
 
     /**
      * Actualizar un usuario existente
@@ -45,4 +48,13 @@ public interface UserDao {
      */
     @SqlUpdate("UPDATE users SET name = :name, username = :username, email = :email, createdAt = :createdAt, updatedAt = :updatedAt")
     int update(@BindBean UserEntity user);
+
+    /**
+     * Eliminar un usuario por id
+     *
+     * @param id Id del usuario a eliminar
+     * @return Número de filas eliminadas de la bbdd
+     */
+    @SqlUpdate("DELETE FROM users WHERE id = :id")
+    int delete(@Bind("id") long id);
 }
